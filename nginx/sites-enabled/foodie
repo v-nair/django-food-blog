@@ -1,0 +1,74 @@
+# HTTP server block
+server {
+    listen 80;
+    server_name localhost;
+    client_max_body_size 100M;
+
+    # Redirect all HTTP to HTTPS if you want strict security:
+    return 301 https://$host$request_uri;
+
+    # If not redirecting yet, keep this for local testing.
+    # Or remove this entire server block after you confirm HTTPS works.
+    location / {
+        proxy_pass http://web:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Still serve health.html over HTTP for quick checks, if needed
+    location /health.html {
+        root /code/staticfiles;
+    }
+}
+
+# HTTPS server block
+server {
+    listen 443 ssl;
+    server_name localhost;
+    client_max_body_size 100M;
+
+    ssl_certificate     /etc/nginx/certs/foodie.crt;
+    ssl_certificate_key /etc/nginx/certs/foodie.key;
+
+    # Security headers
+    add_header Content-Security-Policy "default-src 'self';";
+    add_header X-Content-Type-Options nosniff;
+    add_header X-Frame-Options DENY;
+    add_header X-XSS-Protection "1; mode=block";
+
+    # Gzip Compression
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+    gzip_proxied any;
+    gzip_vary on;
+
+    # Serve static files with caching
+    location /static/ {
+        alias /code/staticfiles/;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+    }
+
+    # Serve media files with caching
+    location /media/ {
+        alias /code/mediafiles/;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+    }
+
+    # Proxy pass to Django app
+    location / {
+        proxy_pass http://web:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Health check endpoint over HTTPS
+    location /health.html {
+        root /code/static;
+    }
+}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Admin User Registration
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center">Create an Account</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="row p-3">
+                                <div class="col">
+                                    <p class="form-label">{{ field.name }}</p>
+                                </div>
+                                <div class="col">
+                                    {{ field }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="row p-3">
+                            <div class="col text-center">
+                                <button class="btn btn-primary col-12" type="submit">Register</button>
+                            </div>
+                        </div>
+                        <div class="row pe-3 ps-3">
+                            <div class="col text-center">
+                                <p>Already have an account? <a href="{% url 'login' %}">Click here to login</a></p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
