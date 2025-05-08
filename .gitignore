@@ -2,3 +2,5 @@ web/foodie/logs/foodie.logs
 .vscode/
 web/.DS_Store
 web/foodie/.DS_Store
+
+.token
