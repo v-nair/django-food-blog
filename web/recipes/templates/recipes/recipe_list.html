@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Browse Recipes{% endblock %}
+
+{% block body %}
+<section id="content" class="s-content">
+
+  <div class="s-pageheader">
+    <h1 class="page-title">
+      {% if request.GET.tag %}Category: {{ request.GET.tag }}
+      {% elif request.GET.q %}Search: “{{ request.GET.q }}”
+      {% elif request.GET.user %}Recipes by {{ request.GET.user }}
+      {% else %}All Recipes{% endif %}
+    </h1>
+  </div>
+
+  <div id="bricks" class="bricks">
+    <div class="masonry">
+      <div class="bricks-wrapper" data-animate-block id="recipes-container">
+        {% include "recipes/partials/recipe_cards.html" with recipes=recipes %}
+      </div>
+    </div>
+    {# sentinel for IntersectionObserver #}
+    <div id="scroll-sentinel"></div>
+  </div>
+
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  let nextPage = 2;
+  const sentinel = document.querySelector('#scroll-sentinel');
+  const container = document.getElementById('recipes-container');
+  const qs = "{{ query_params }}";
+  let loading = false;
+
+  const loadMore = () => {
+    if (loading) return;
+    loading = true;
+
+    // build URL: /recipes/api/?page=...&existing params
+    const params = new URLSearchParams(qs);
+    params.set('page', nextPage);
+
+    fetch("{% url 'recipes:api_list' %}?"+params.toString(), {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(r => r.json())
+    .then(data => {
+      container.insertAdjacentHTML('beforeend', data.html);
+      if (data.has_next) {
+        nextPage++;
+        loading = false;
+      } else {
+        observer.disconnect();
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      observer.disconnect();
+    });
+  };
+
+  const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      loadMore();
+    }
+  }, {
+    rootMargin: '200px'
+  });
+
+  observer.observe(sentinel);
+});
+</script>
+{% endblock %}

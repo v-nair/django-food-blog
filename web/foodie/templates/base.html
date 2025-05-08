@@ -1,40 +1,54 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Foodie{% endblock %}</title>
-        <link rel="stylesheet" href="{% static 'bootstrap/bootstrap@5.3.3.min.css' %}" />
-        <link rel="stylesheet" href="{% static 'common/css/style.css' %}">
-        <link rel="stylesheet" href="{% static 'common/css/media.css' %}">
-        {% block extra_css %}{% endblock %}
-    </head>    
-<body>
-    {% include "navbar.html" %}
-    
-    {# print messages #}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">{{message}}</div>
-        {% endfor %}
-    {% endif %}
-    
-    {% block body %}{% endblock %}
-    
-    <footer>
-        {% block footer %}
-            <div class="container-fluid p-4 bg-primary-subtle">
-                <div class="row">
-                    <div class="col">
-                        <p>© 2024 My Website</p>
-                    </div>
-                </div>
-            </div>
-        {% endblock %}
-        <script src="{% static 'bootstrap/bootstrap@5.3.3.bundle.min.js' %}" ></script>
-        <script src="{% static 'bootstrap/jquery-3.7.1.min.js' %}" ></script>
-        {% block extra_js %}{% endblock %}
-    </footer>
+<html lang="en" class="no-js" >
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Foodie{% endblock %}</title>
+
+    <script>
+        document.documentElement.classList.remove('no-js');
+        document.documentElement.classList.add('js');
+    </script>
+
+    <link rel="stylesheet" href="{% static 'common/css/vendor.css' %}">
+    <link rel="stylesheet" href="{% static 'common/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'common/css/media.css' %}">
+    {% block extra_css %}{% endblock %}
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+
+</head>
+
+<body id="top">
+
+
+    <!-- preloader
+    ================================================== -->
+    <div id="preloader">
+        <div id="loader" class="dots-fade">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+
+    <div id="page" class="s-pagewrap">
+        {% include "header.html" %}
+
+        {% block body %}{% endblock %}
+
+        {% include "footer.html" %}
+
+    <script src="{% static 'common/js/plugins.js' %}"></script>
+    <script src="{% static 'common/js/main.js' %}"></script>
+    <script src="{% static 'bootstrap/jquery-3.7.1.min.js' %}" ></script>
+
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -17,22 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django_prometheus import exports
-from .views import health_view, home_view
+from .views import health_view, landing_page
 from django.conf import settings
 from django.conf.urls.static import static
-from manager import views as admin_views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("metrics/", exports.ExportToDjangoView, name="metrics"), # Prometheus metrics endpoint
     path("health/", health_view, name="health"), # Health check endpoint
-    path('', home_view, name='home'),  # default page
-    path("menu/", include('menu.urls')), # connected to menu
-    path("register/", admin_views.register, name="register"), # connected to menu
-    path("login/", auth_views.LoginView.as_view(template_name='manager/login.html'), name="login"), # default redirect is to accounts/profile
-    path("logout/", auth_views.LogoutView.as_view(template_name='manager/logout.html'), name="logout"),
-    path("profile/", admin_views.profile, name="profile"),
+    path('', landing_page, name='home'),  # default page
+    path("recipes/", include('recipes.urls')), # connected to recipes
 ]
 
 # Serve media files during development

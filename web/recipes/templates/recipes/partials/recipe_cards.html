@@ -1,0 +1,31 @@
+
+{% for recipe in recipes %}
+<article class="brick entry" data-animate-el>
+  <div class="entry__thumb">
+    <a href="{{ recipe.get_absolute_url }}" class="thumb-link">
+      <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}">
+    </a>
+  </div>
+  <div class="entry__text">
+    <div class="entry__header">
+      <div class="entry__meta">
+        <span class="cat-links">
+          {% for tag in recipe.tags.all %}
+            <a href="?tag={{ tag.name }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+          {% empty %}
+            —
+          {% endfor %}
+        </span>
+        <span class="byline">By: <a href="?user={{ recipe.author.id }}">{{ recipe.author.username }}</a></span>
+      </div>
+      <h1 class="entry__title">
+        <a href="{{ recipe.get_absolute_url }}">{{ recipe.title }}</a>
+      </h1>
+    </div>
+    <div class="entry__excerpt">
+      <p>{{ recipe.description|truncatewords:20 }}</p>
+    </div>
+    <a class="entry__more-link" href="{{ recipe.get_absolute_url }}">Read More</a>
+  </div>
+</article>
+{% endfor %}

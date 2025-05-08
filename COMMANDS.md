@@ -21,11 +21,11 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -subj "/C=US/ST=State/L=City/O=Organization/OU=OrgUnit/CN=localhost"
 ```
 
-## Django Commands
+## DJANGO Commands - Local Development
 To run django commands you will need to enter into the django container.
 ```bash
 docker compose stop web # only for development; stops the reverse proxy 
-docker-compose run --rm --service-ports web python manage.py runserver 0.0.0.0:8000
+docker-compose run --rm --service-ports web python3 manage.py runserver 0.0.0.0:8000
 ```
 or
 ```bash
@@ -33,30 +33,58 @@ docker exec -it [container_id] bash
 ```
 Then you can run the following commands:
 
-### create a new project
-```bash
-django-admin startproject [project_name]
-```
+## DJANGO Commands
 
-### while using django server
-```bash
-python manage.py runserver 0.0.0.0:8000 # to start django server ; not required if running Gunicorn (production)
-python3 manage.py startapp [app] # to create app section in django
-```
+django-admin startproject [project name]
 
-### creating tables in database
-```bash
-python3 manage.py makemigrations [app] # to make migrations
-python3 manage.py sqlmigrate [app] {migration no} # to get sql migration
-python3 manage.py migrate # to migrate database
-```
+python3 manage.py migrate # to create the default tables required in the INSTALLED_APPS
 
-### creates the admin user for current django project
-```bash
-python3 manage.py createsuperuser # to create superuser
-```
+python3 manage.py startapp [app name]
 
-### accessing and managing tables
-```bash
-python3 manage.py shell # to start db shell
-```
+
+python3 manage.py makemigrations [app name] # migrate tables
+python3 manage.py migrate
+
+
+
+
+
+
+
+
+
+# Queries
+INSERT INTO "recipes_tag" ("id", "name") VALUES
+(1,	'Instant Pot'),
+(2,	'Chicken Breast'),
+(3,	'Indian'),
+(4,	'Japanese'),
+(5,	'Shrimp'),
+(6,	'Baking');
+
+
+INSERT INTO "auth_user" ("id", "password", "last_login", "is_superuser", "username", "first_name", "last_name", "email", "is_staff", "is_active", "date_joined") VALUES
+(1,	'12345',	NULL,	'1',	'varsha',	'Varsha',	'Nair',	'varshanair.personal@gmail.com',	'1',	'1',	'2025-05-04 18:39:08.782105+00');
+
+
+INSERT INTO "recipes_recipe" ("id", "title", "image", "description", "cooking_time", "servings", "created_at", "updated_at", "author_id") VALUES
+(1,	'Ebi Fry (Japanese Fried Shrimp)',	'images/hot-cross-buns.png',	'Succulent jumbo prawns coated with panko breadcrumbs and fried till golden brown, this crunchy Japanese fried shrimp called Ebi Fry (Ebi Furai) is a popular Western-style (yoshoku) dish in Japan. Enjoy it with tartar sauce or tonkatsu sauce!',	75,	4,	'2025-05-04 18:40:03.435976+00',	'2025-05-04 18:40:03.435976+00',	1),
+(2,	'Hot Cross Buns',	'images/hot-ebi-fry.png',	'These hot cross buns studded with plump dried cherries and luscious melty chunks of white chocolate are incredibly soft, fluffy, and delicious.',	165,	4,	'2025-05-04 18:44:49.644169+00',	'2025-05-04 18:44:49.644169+00',	1),
+(3,	'Butter Chicken',	'images/butter-chicken.png',	'Instant Pot butter chicken is savory and saucy and perfect with rice and naan.',	30,	4,	'2025-05-04 18:46:25.20855+00',	'2025-05-04 18:46:25.20855+00',	1);
+
+
+INSERT INTO "recipes_featured" ("id", "title", "image", "subtitle", "created_at", "updated_at", "recipe_id_id") VALUES
+(1,	'How to make Ebi Fry',	'images/hot-cross-buns.png',	'Succulent jumbo prawns coated with panko breadcrumbs and fried till golden brown',	'2025-05-04 18:47:24.425472+00',	'2025-05-04 18:47:24.425472+00',	1),
+(2,	'Hot Cross Buns',	'images/hot-cross-buns.png',	'These hot cross buns studded with plump dried cherries and luscious melty chunks of white chocolate',	'2025-05-04 18:48:09.283072+00',	'2025-05-04 18:48:09.283072+00',	2),
+(3,	'Instant Pot Butter Chicken',	'images/butter-chicken.png',	'Instant Pot butter chicken is savory and saucy and perfect with rice and naan.',	'2025-05-04 18:48:42.813109+00',	'2025-05-04 18:48:42.813109+00',	3);
+
+
+INSERT INTO "recipes_recipe_tags" ("id", "recipe_id", "tag_id") VALUES
+(1,	1,	4),
+(2,	1,	5),
+(3,	2,	6),
+(4,	3,	1),
+(5,	3,	2),
+(6,	3,	3);
+
+

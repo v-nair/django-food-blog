@@ -24,8 +24,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_prometheus",  # For Prometheus metrics
     # add apps folders here
-    "menu.apps.MenuConfig",
-    "manager.apps.ManagerConfig",
+    "recipes.apps.RecipesConfig",
+    # "accounts.apps.AccountsConfig",
 ]
 
 MIDDLEWARE = [
@@ -69,9 +69,9 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "mediafiles"
 
-LOGIN_REDIRECT_URL = "menu:index"
+LOGIN_REDIRECT_URL = "recipes:index"
 LOGIN_URL = "login"
-# LOGOUT_REDIRECT_URL = "menu:index"
+# LOGOUT_REDIRECT_URL = "recipes:index"
 
 # Prometheus metrics at /metrics by default.
 

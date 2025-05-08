@@ -1,1 +1,4 @@
-# web/foodie/logs/foodie.logs
+web/foodie/logs/foodie.logs
+.vscode/
+web/.DS_Store
+web/foodie/.DS_Store

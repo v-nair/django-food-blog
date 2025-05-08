@@ -115,6 +115,18 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    # Adminer will let you connect with POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
+    # System: PostgreSQL
+    # Server: db
 
 volumes:
   postgres_data:
